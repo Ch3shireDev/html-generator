@@ -12,6 +12,7 @@ class Html{
     protected $type = 'div';
     protected $attributes = array();
     protected $content = array();
+    protected $format = true;
 
     static $selfClosedTags = array(
         "area",
@@ -32,6 +33,11 @@ class Html{
         "track",
         "wbr"
     );
+
+    public function dontFormat(){
+        $this->format=false;
+        return $this;
+    }
 
     public function __call($method, $args){
         $this->attributes[$method] = implode($args);
@@ -97,7 +103,9 @@ class Html{
     public function closing(){
         $str="";
         if(count($this->content)>0){
-            $str.="\n";
+            if($this->format){
+                $str.="\n";
+            }
         }
         $str .= "</".$this->type.">";
         return $str;
@@ -109,7 +117,10 @@ class Html{
             $a = "$element";
             $lines = explode("\n", $a);
             foreach($lines as $line){
-                $str .= "\n\t$line";
+                if($this->format){
+                    $str .= "\n\t";
+                }
+                $str .= $line;
             }
         }
         return $str;
