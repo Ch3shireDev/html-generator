@@ -107,7 +107,7 @@ class Html{
                 $str.="\n";
             }
         }
-        $str .= "</".$this->type.">";
+        $str .= "</".$this->type.">\n";
         return $str;
     }
 
@@ -117,6 +117,9 @@ class Html{
             $a = "$element";
             $lines = explode("\n", $a);
             foreach($lines as $line){
+                if(ctype_space($line)){
+                    continue;
+                }
                 if($this->format){
                     $str .= "\n\t";
                 }
