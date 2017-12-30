@@ -7,6 +7,16 @@
  * @author Ch3shireDev
  */
 
+class argument{
+    public $value;
+    public $quotation = true;
+
+    public function __construct($value, $quotation=true){
+        $this->value = $value;
+        $this->quotation = $quotation;
+    }
+}
+
 class Html{
 
     protected $type = 'div';
@@ -40,7 +50,11 @@ class Html{
     }
 
     public function __call($method, $args){
-        $this->attributes[$method] = implode($args);
+        $value = new argument($args[0]);
+        if(count($args)>1){
+            $value->quotation = $args[1];
+        }
+        $this->attributes[$method] = $value;
         return $this;
     }
 
@@ -132,7 +146,13 @@ class Html{
     private function startOpening(){
         $str = "<".$this->type;
         foreach($this->attributes as $key=>$value){
-            $str .= " ".$key."=\"".$value."\"";
+            $val = $value->value;
+            if($value->quotation){
+                $str .= " ".$key."=\"".$val."\"";
+            }
+            else{
+                $str .= " ".$key."=".$val;
+            }
         }
         return $str;
     }
